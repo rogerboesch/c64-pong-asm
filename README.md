@@ -4,9 +4,9 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 
 ### TODO:
 
-- [ ] Use correct adresses in STAx and LDx
-- [ ] Check variables
 - [ ] Check sprite memory
+- [ ] Use variables in STAx and LDx (at work)
+- [x] Check variables
 - [x] Write old style ASM
 - [x] JMP,JSP: Use labels instead of memory adresses
 - [x] BNE,BCS,BCC,BEQ: Use labels instead of memory adresses
