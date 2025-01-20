@@ -1,6 +1,6 @@
 # C64 Assembler - Pong
 
-This is WIP of converting Ponk to KickAssembler
+This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 
 ### TODO:
 
