@@ -50,10 +50,10 @@ START:  nop
         lda #$38 
         sta $07FB           // SCOREBOARD GRAPHICS
         lda #$00 
-        sta $0BF0           // BALL.X.DIRECTION
-        sta $0BF1           // BALL.Y.DIRECTION
-        sta $0BFE           // P2.SCORE
-        sta $0BFF           // P1.SCORE
+        sta VBALLVX         // BALL.X.DIRECTION
+        sta VBALLVY         // BALL.Y.DIRECTION
+        sta VSCOREP2        // P2.SCORE
+        sta VSCOREP1        // P1.SCORE
         ldx #$00            // CLS
         lda #$20            // SPACE
 LBL_1:  sta $0400,X         // SCREEN LOC 0400-07F0
@@ -166,18 +166,18 @@ LBL_13:     rts
 //
 // - BALL MOVEMENT ---------------------
 //
-BALL_MOV:   lda $0BF0    
+BALL_MOV:   lda VBALLVX    
             beq LBL_14      // CHECK BALL H DIR
             inc $D004       // IF 0 - MOVE RIGHT
             jmp LBL_15
 LBL_14:     dec $D004       // IF 1 - MOVE LEFT
-LBL_15:     lda $0BF1
+LBL_15:     lda $VBALLVY
             beq LBL_16      // CHECK BALL V DIR
             inc $D005       // IF 0 - MOVE DOWN
             jmp LBL_17
 LBL_16:     dec $D005       // IF 1 - MOVE UP
 LBL_17:     lda $D004       // CHECK FOR X OVERFLOW 
-            ldx $0BF0       // TO SETUP THE 9BIT
+            ldx VBALLVX       // TO SETUP THE 9BIT
             beq LBL_18      // CHECK FOR 00 OR FF
             eor #$FF        // DEPENDS ON DIR
 LBL_18:     and #$FF
@@ -190,13 +190,13 @@ LBL_19:     ldy #$20        // SET BLEEP PITCH
             cmp #$32        // CHECK IF TOO HIGH
             bcs LBL_20  
             lda #$01        // CHANGE DIRECTION
-            sta $0BF1
+            sta VBALLVY
             jsr BLEEP
 LBL_20:     lda $D005       // GET BALL Y
             cmp #$F0        // CHECK IF TO LOW
             bcc LBL_21
             lda #$00        // CHANGE DIRECTION
-            sta $0BF1
+            sta VBALLVY
             jsr BLEEP   
 LBL_21:     rts
 //
@@ -210,7 +210,7 @@ GOAL_CHECK: lda $D010       // CHECK HIGHT OF
             bcc LBL_23      // CHK 16 < BALL.X < 32
             cmp #$20
             bcs LBL_23
-            inc $0BFE       // INCREASE SCORE
+            inc VSCOREP2    // INCREASE SCORE
             jsr BALL_RST
 LBL_23:     rts
 LBL_22:     lda $D004       // IF H.BIT IS ENABLED
@@ -218,13 +218,13 @@ LBL_22:     lda $D004       // IF H.BIT IS ENABLED
             bcs LBL_24
             cmp #$60
             bcc LBL_24      // CHK 384 < BALLX < 496
-            inc $0BFF
+            inc VSCOREP1
             jsr BALL_RST
 LBL_24:     rts
 //
 // - SCORE RENDER ----------------------
 //
-SCORE_REND: lda $0BFF       // LOAD P1 SCORE
+SCORE_REND: lda VSCOREP1    // LOAD P1 SCORE
             and #$0F
             asl             // MULTIPLY BY 8
             asl
@@ -241,7 +241,7 @@ LBL_25:     lda $0930,X     // LOAD NUMBER GFX LINE
             iny             // =24 PIXELS
             dec $C000
             bne LBL_25      // REPEAT FOR 8 LINES
-            lda $0BFE       // LOAD P2 SCORE
+            lda VSCOREP2    // LOAD P2 SCORE
             and #$0F
             asl             // MULTIPLY NY 8
             asl
@@ -262,11 +262,11 @@ LBL_26:     lda $0930,X     // LOAD NUM GFX LINE
 //
 // - MATCH OVER CHECK ------------------
 //
-WIN_CHECK:  lda $0BFE       // CHECK P2 SCORE
+WIN_CHECK:  lda VSCOREP2    // CHECK P2 SCORE
             cmp #$0A        // IF >= 10
             bcc LBL_27
             jmp START       // RESET IF YES
-LBL_27:     lda $0BFF       // GET P1 SCORE
+LBL_27:     lda VSCOREP1    // GET P1 SCORE
             cmp #$0A        // IF >= 10
             bcc LBL_28
             jmp START       // RESET IF YES
@@ -280,20 +280,20 @@ COLL_CHEK:  ldy #$40        // SET BLEEP PITCH
             and #$01
             beq LBL_29      // IF P1 IS COLLIDING
             lda #$01        // CHANGE BALL DIR.
-            sta $0BF0
+            sta VBALLVX
             jsr BLEEP
 LBL_29:     txa
             and #$02
             beq LBL_30      // IF P2 IS COLLIDING
             lda #$00        // CHANGE BALL DIR.
-            sta $0BF0
+            sta VBALLVX
             jsr BLEEP
 LBL_30:     rts
 //
 // - SLOWDOWN --------------------------
 //
-SLOWDOWN:   ldx $0BF2       // LOAD SPEED VALUES
-LBL_32:     ldy $0BF3
+SLOWDOWN:   ldx VSLOWX       // LOAD SPEED VALUES
+LBL_32:     ldy VSLOWY
 LBL_31:     nop
             nop
             nop
@@ -312,9 +312,9 @@ BALL_RST:   lda #$AC
             lda $D010
             and #$FB        // CLEAR 9TH BIT
             sta $D010       // OF BALL.X
-            lda $0BF0
+            lda VBALLVX
             eor #$01        // TOGGLE DIRECTION
-            sta $0BF0
+            sta VBALLVX
             ldy #$10        // SET BLEEP PITCH
             jsr BLEEP
             rts
@@ -375,8 +375,9 @@ BALL:       .byte $C0,$00,$00,$C0,$00,$00,$00,$00
 //
 // VARIABLES
 //
-VARS:       //     BALL   SLOWDOWN
-            //    |VX VY|  |VALS|
-            .byte $00,$00,$1F,$1F,$00,$00,$00,$00
-            .byte $00,$00,$00,$00,$00,$00,$00,$00
-            //                            |SCORE|
+VBALLVX:    .byte $00   // Ball velocity x  $0BF0 (old mem!)
+VBALLVY:    .byte $00   // .. y             $0BF1
+VSLOWX:     .byte $1f   // Ball slowdown x  $0BF2
+VSLOWY:     .byte $1f   // .. y             $0BF3
+VSCOREP1:   .byte $00   // Score player 1   $0BFF
+VSCOREP2:   .byte $00   // Score player 2   $0BFE
