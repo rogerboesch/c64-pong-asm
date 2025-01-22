@@ -5,6 +5,9 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 ### TODO:
 
 - [ ] Display sprites correctly
+    - [x] Paddles
+    - [ ] Ball
+    - [ ] Scoreboard
 - [x] Sound
 - [x] Joystick handling
 - [x] Test game, gameplay
