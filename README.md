@@ -26,4 +26,4 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 
 ### Original "Source"
 
-![PONK](ponk.png)
+![PONK](/doc/ponk.png)
