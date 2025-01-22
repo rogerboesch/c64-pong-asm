@@ -1,10 +1,17 @@
-*=$801 "Game"
-
-// Add basic starter (SYS(2064))
-.byte $0C,$8,$0A,$00,$9E,$20,$32,$30,$36,$34,$00,$00,$00,$00,$00
+*=$0800 "BASIC Start"  
+// These bytes are a one line basic program that will 
+// do a sys call to assembly language portion of
+// of the program which will be at $1000 or 4096 decimal
+// basic line is: 10 SYS (4096)
+.byte $00                               // first byte of basic should be a zero
+.byte $0E, $08                          // Forward address to next basic line
+.byte $0A, $00                          // this will be line 10 ($0A)
+.byte $9E                               // basic token for SYS
+.byte $20, $28, $34, $30, $39, $36, $29 // ASCII for " (4096)"
+.byte $00, $00, $00                     // end of basic program (addr $080E from above)
 
 //
-// - ROM Adresses ---------------------
+// - ROM Adresses (Constants) ---------
 //
 
 // Zero Page ($0000-$00FF | 0-255)
@@ -13,53 +20,55 @@
 // Name ($0300-$03FF, 768-1023)
 
 // Default Screen Memory ($0400-$07F0 | 1024-2047)
-.var CHARMEM     = $0400        // Character memory $0400-$07F0
+.const CHARMEM     = $0400        // Character memory $0400-$07F0
 
 // Upper RAM Area ($C000-$CFFF | 49152-53247)
-.var MEM_UPRAM    = $C000       // Upper RAM area begin
+.const MEM_UPRAM    = $C000       // Upper RAM area begin
 
 // VIC-II: Video Display ($D000-$DFFF | 53248-54271)
-.var SPRITE0_X   = $D000        // Sprite #0 X-coordinate
-.var SPRITE0_Y   = $D001        // Sprite #0 Y-coordinate
-.var SPRITE1_X   = $D002        // Sprite #1 X-coordinate
-.var SPRITE1_Y   = $D003        // Sprite #1 Y-coordinate
-.var SPRITE2_X   = $D004        // Sprite #2 X-coordinate
-.var SPRITE2_Y   = $D005        // Sprite #2 Y-coordinate
-.var SPRITE3_X   = $D006        // Sprite #3 X-coordinate
-.var SPRITE3_Y   = $D007        // Sprite #3 Y-coordinate
-.var SCREEN_CTL  = $D011        // Screen Control Register
-.var SPRITE_DBH  = $D017        // Sprite double height register
-.var SPRITE_DBL  = $D01D        // Sprite double vertical register
-.var BORDER_COL  = $D020        // Border color
-.var BGND_COL    = $D021        // Background color
-.var SPRITE0_CLR = $D027        // Sprite #0 color 
-.var SPRITE1_CLR = $D028        // Sprite #1 color 
-.var SPRITE2_CLR = $D029        // Sprite #2 color 
-.var SPRITE3_CLR = $D02A        // Sprite #3 color
-.var SPRITE0_PTR = $07F8        // Sprite pointer #0
-.var SPRITE1_PTR = $07F9        // Sprite pointer #1
-.var SPRITE2_PTR = $07FA        // Sprite pointer #2
-.var SPRITE_CORD = $D010        // Sprite #0-#7 X-coordinates (bit #8). Bits
-.var SPRITE_ENBL = $D015        // Sprite enable register
-.var SPRITE_COLL = $D01E        // Sprite/sprite collision register
+.const SPRITE0_X   = $D000        // Sprite #0 X-coordinate
+.const SPRITE0_Y   = $D001        // Sprite #0 Y-coordinate
+.const SPRITE1_X   = $D002        // Sprite #1 X-coordinate
+.const SPRITE1_Y   = $D003        // Sprite #1 Y-coordinate
+.const SPRITE2_X   = $D004        // Sprite #2 X-coordinate
+.const SPRITE2_Y   = $D005        // Sprite #2 Y-coordinate
+.const SPRITE3_X   = $D006        // Sprite #3 X-coordinate
+.const SPRITE3_Y   = $D007        // Sprite #3 Y-coordinate
+.const SCREEN_CTL  = $D011        // Screen Control Register
+.const SPRITE_DBH  = $D017        // Sprite double height register
+.const SPRITE_DBL  = $D01D        // Sprite double vertical register
+.const BORDER_COL  = $D020        // Border color
+.const BGND_COL    = $D021        // Background color
+.const SPRITE0_CLR = $D027        // Sprite #0 color 
+.const SPRITE1_CLR = $D028        // Sprite #1 color 
+.const SPRITE2_CLR = $D029        // Sprite #2 color 
+.const SPRITE3_CLR = $D02A        // Sprite #3 color
+.const SPRITE0_PTR = $07F8        // Sprite pointer #0
+.const SPRITE1_PTR = $07F9        // Sprite pointer #1
+.const SPRITE2_PTR = $07FA        // Sprite pointer #2
+.const SPRITE_CORD = $D010        // Sprite #0-#7 X-coordinates (bit #8). Bits
+.const SPRITE_ENBL = $D015        // Sprite enable register
+.const SPRITE_COLL = $D01E        // Sprite/sprite collision register
 
 // SID: Audio ($D400-$D7FF | 54272-55295)
-.var SIDV1_FRQL  = $D400    // SID: Voice #1 frequency (low-byte)
-.var SIDV1_FRQH  = $D401    // SID: Voice #1 frequency (high-byte)
-.var SIDV1_CTRL  = $D404    // SID: Voice #1 control register
-.var SIDV1_ATDE  = $D405    // SID: Voice #1 Attack and Decay length
-.var SIDV1_SURE  = $D406    // SID: Voice #1 Sustain volume and Release length
-.var SID_VOLFLT  = $D418    // SID: Volume and filter modes
+.const SIDV1_FRQL  = $D400    // SID: Voice #1 frequency (low-byte)
+.const SIDV1_FRQH  = $D401    // SID: Voice #1 frequency (high-byte)
+.const SIDV1_CTRL  = $D404    // SID: Voice #1 control register
+.const SIDV1_ATDE  = $D405    // SID: Voice #1 Attack and Decay length
+.const SIDV1_SURE  = $D406    // SID: Voice #1 Sustain volume and Release length
+.const SID_VOLFLT  = $D418    // SID: Volume and filter modes
 
 // CIA: Inputs ($DC00-$DCFF |56320-56575)
-.var CIA_PORTA   = $DC00    // Port A, keyboard matrix columns and joystick #2
-.var CIA_PORTB   = $DC01    // Port B, keyboard matrix rows and joystick #1
+.const CIA_PORTA   = $DC00    // Port A, keyboard matrix columns and joystick #2
+.const CIA_PORTB   = $DC01    // Port B, keyboard matrix rows and joystick #1
 
 // Program vars
-.var CHARMEM_X1  = $0500        // Offset 1 to charmem
-.var CHARMEM_X2  = $0600        // Offset 2 to charmen
-.var CHARMEM_X3  = $06F0        // Offset 3 to charmem, TODO: Only 240 instead of 256 difference, is this correct?
-.var CHARMEM_P1  = $07FB        // Position in charmem for scoreboard graphic
+.const CHARMEM_X1  = $0500        // Offset 1 to charmem
+.const CHARMEM_X2  = $0600        // Offset 2 to charmen
+.const CHARMEM_X3  = $06F0        // Offset 3 to charmem, TODO: Only 240 instead of 256 difference, is this correct?
+.const CHARMEM_P1  = $07FB        // Position in charmem for scoreboard graphic
+
+*=$1000 "Game"
 
 //
 // - Initialisation --------------------
@@ -398,7 +407,21 @@ BLEEP:      sty SIDV1_FRQH      // H.byte OF FREQ TO Y
             sta SIDV1_CTRL
             rts
 //
+// = Variables ========================
+//
+VBALLVX:    .byte $00   // Ball velocity x  $0BF0 (old mem!)
+VBALLVY:    .byte $00   // .. y             $0BF1
+VSLOWX:     .byte $1f   // Ball slowdown x  $0BF2
+VSLOWY:     .byte $1f   // .. y             $0BF3
+VSCOREP1:   .byte $00   // Score player 1   $0BFF
+VSCOREP2:   .byte $00   // Score player 2   $0BFE
+
+//
 // = Data ==============================
+//
+
+*=$1770 "Game Data"
+
 //
 // Number Graphics
 //
@@ -434,17 +457,9 @@ BALL:       .byte $C0,$00,$00,$C0,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
+
 //
-// Variables
-//
-VBALLVX:    .byte $00   // Ball velocity x  $0BF0 (old mem!)
-VBALLVY:    .byte $00   // .. y             $0BF1
-VSLOWX:     .byte $1f   // Ball slowdown x  $0BF2
-VSLOWY:     .byte $1f   // .. y             $0BF3
-VSCOREP1:   .byte $00   // Score player 1   $0BFF
-VSCOREP2:   .byte $00   // Score player 2   $0BFE
-//
-// Memory Scoreboard Sprite (64 bytes)
+// Scoreboard Sprite
 //
 SCOREBRD:   .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
@@ -454,3 +469,4 @@ SCOREBRD:   .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
+
