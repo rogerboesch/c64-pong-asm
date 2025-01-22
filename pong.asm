@@ -71,24 +71,21 @@
 // = BASIC ====================================================================
 //
 
-*=$0800 "BASIC Starter"  
+*=$800 "BASIC"
 
-// These bytes are a one line basic program that will 
-// do a sys call to assembly language portion of
-// of the program which will be at $1000 or 4096 decimal
-// basic line is: 10 SYS (4096)
-.byte $00                               // first byte of basic should be a zero
-.byte $0E, $08                          // Forward address to next basic line
-.byte $0A, $00                          // this will be line 10 ($0A)
-.byte $9E                               // basic token for SYS
-.byte $20, $28, $34, $30, $39, $36, $29 // ASCII for " (4096)"
-.byte $00, $00, $00                     // end of basic program (addr $080E from above)
+// Add basic starter (SYS(2064))
+.byte $00                           // first byte of BASIC must be 0
+.byte $0C,$8                        // froward adress to next BASIC line
+.byte $0A,$00                       // line 10
+.byte $9E                           // BASIC token for SYS
+.byte $20,$32,$30,$36,$34,$00,$00   // ASCII for " (2064)"
+.byte $00,$00,$00                   // end of BASIC
 
 //
 // = Game =====================================================================
 //
 
-*=$1000 "Game"
+*=$810 "Game"
 
 //
 // - Initialisation -----------------------------------------------------------
@@ -439,8 +436,6 @@ VSCOREP2:   .byte $00   // Score player 2   $0BFE
 //
 // = Data =====================================================================
 //
-
-*=$1770 "Sprite Data"
 
 //
 // Number Graphics
