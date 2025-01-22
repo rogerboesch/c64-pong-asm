@@ -426,6 +426,7 @@ BLEEP:      sty SIDV1_FRQH      // H.byte OF FREQ TO Y
 //
 // = Variables ================================================================
 //
+
 VBALLVX:    .byte $00   // Ball velocity x  $0BF0 (old mem!)
 VBALLVY:    .byte $00   // .. y             $0BF1
 VSLOWX:     .byte $1f   // Ball slowdown x  $0BF2
@@ -436,6 +437,8 @@ VSCOREP2:   .byte $00   // Score player 2   $0BFE
 //
 // = Data =====================================================================
 //
+
+*=$0BE0 "DATA"
 
 //
 // Number Graphics
