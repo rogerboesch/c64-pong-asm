@@ -56,7 +56,6 @@
 .const CHARMEM_X1  = $0500      // Offset 1 to charmem
 .const CHARMEM_X2  = $0600      // Offset 2 to charmen
 .const CHARMEM_X3  = $06F0      // Offset 3 to charmem, TODO: Only 240 instead of 256 difference, is this correct?
-.const CHARMEM_P1  = $07FB      // Position in charmem for scoreboard graphic
 
 //
 // - KERNAL Functions (Constants) ============================================
@@ -140,9 +139,7 @@ START:      nop
             sta BORDER_COL      // border color
             lda #$05 
             sta BGND_COL        // background color
-            lda #$38 
-            sta CHARMEM_P1      // SCOREBOARD GRAPHICS ??
-             // ------------------- reset variables
+            // ------------------- reset variables
             lda #$00 
             sta VBALLVX         // ball.vx
             sta VBALLVY         // ball.vy
