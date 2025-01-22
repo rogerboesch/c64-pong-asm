@@ -93,6 +93,9 @@
 // - Initialisation -----------------------------------------------------------
 //
 START:      nop
+//
+// Init all 4 sprites
+//
             lda #$80            // sprite 0: paddle 1 ($2000/64=$80)
             sta SPRITE0_PTR     
             lda #$20 
@@ -139,49 +142,54 @@ START:      nop
             sta BGND_COL        // background color
             lda #$38 
             sta CHARMEM_P1      // SCOREBOARD GRAPHICS ??
+             // ------------------- reset variables
             lda #$00 
-            sta VBALLVX         // reset variable  to 0 (ball.vx)
+            sta VBALLVX         // ball.vx
             sta VBALLVY         // ball.vy
             sta VSCOREP2        // p2.score
             sta VSCOREP1        // p2.score
-            ldx #$00            // CLS
-            lda #$20            // SPACE
-LBL_1:      sta CHARMEM,X       // SCREEN LOC 0400-07F0 1024
-            sta CHARMEM_X1,X    // 40X25=1000
+            // ------------------- Clear screen
+            ldx #$00            
+            lda #$20            
+LBL_1:      sta CHARMEM,X       
+            sta CHARMEM_X1,X    
             sta CHARMEM_X2,X  
             sta CHARMEM_X3,X 
             inx
             bne LBL_1 
+            // ------------------- Disable display
             lda SCREEN_CTL 
-            and #$EF            // DISABLE DISPLAY 
-            sta SCREEN_CTL 
+            and #$EF            
+            sta SCREEN_CTL      
+            // ------------------- Startup sequence
             ldx #$C0 
 LBL_2:      ldy #$00
-LBL_3:      jsr BLEEP           // BEEP SOUND
+LBL_3:      jsr BLEEP           
             iny
             bne LBL_3 
-            inc BORDER_COL      // BLINK SCREEN
+            inc BORDER_COL      // blink border
             inx
-            bne LBL_2           // REPEAT
+            bne LBL_2           
             lda #$00 
-            sta BORDER_COL      // SET BORDER BLACK
-            sta BGND_COL        // SET BG BLACK
+            sta BORDER_COL      // blink border
+            sta BGND_COL        // blink background
             lda SCREEN_CTL 
-            ora #$10            // ENABLE DISPLAY
+            // ------------------- Enable display
+            ora #$10           
             sta SCREEN_CTL 
             jmp SCORE_INIT
 //
 // - Sprite Score Clear -------------------------------------------------------
 //
 SCORE_INIT: lda #$00
-            ldx #$40            // CLEAR 64 BYTES
-LBL_4:      sta SCOREBRD,X      // SCOREBOARD SPRITE
+            ldx #$40            
+LBL_4:      sta SCOREBRD,X      // clear all 64 bytes
             dex
             bne LBL_4
-            lda #$3C
+            lda #$3C            // place dot between player scores
             sta SCOREBRD+7
-            sta SCOREBRD+10     // PLACE A DOT
-            sta SCOREBRD+13     // BETWEEN PLAYER SCORES
+            sta SCOREBRD+10     
+            sta SCOREBRD+13     
             sta SCOREBRD+16
             jmp GAME_LOOP
 //
