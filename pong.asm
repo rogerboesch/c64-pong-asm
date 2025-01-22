@@ -93,59 +93,57 @@
 // - Initialisation -----------------------------------------------------------
 //
 START:      nop
-            lda #$80            // Adress of paddle sprite/64 ($2000/64=$80)
-            sta SPRITE0_PTR 
-            sta SPRITE1_PTR     // SPRITE POS INIT
+            lda #$80            // sprite 0: paddle 1 ($2000/64=$80)
+            sta SPRITE0_PTR     
             lda #$20 
-            sta SPRITE0_X       // P1.X
+            sta SPRITE0_X       
             lda #$82 
-            sta SPRITE0_Y       // P1.Y
+            sta SPRITE0_Y       
+            lda #$01 
+            sta SPRITE0_CLR     
+            lda #$80            // sprite 1: paddle 2 ($80)
+            sta SPRITE1_PTR     
             lda #$20 
-            sta SPRITE1_X       // P2.X
+            sta SPRITE1_X       
             lda #$82 
-            sta SPRITE1_Y       // P2.Y
+            sta SPRITE1_Y       
+            lda #$01 
+            sta SPRITE1_CLR     
+            lda #$81            // sprite 2: ball ($81)
+            sta SPRITE2_PTR     
             lda #$AC 
-            sta SPRITE2_X       // BALL.X
+            sta SPRITE2_X       
             lda #$8A 
-            sta SPRITE2_Y       // BALL.Y
-            lda #$80 
-            sta SPRITE0_PTR     // SPRITE GFX P1
-            sta SPRITE1_PTR     // SPRITE GFX P2
-            lda #$81            // Next sprite is ball sprite
-            sta SPRITE2_PTR     // SPRITE GFX BALL
-            lda #$0F 
-            sta SPRITE_DBH      // SPRITE H STRETCH
-            lda #$02 
-            sta SPRITE_CORD     // SET P2.X HIGH BIT
-            lda #$0F            //  (X IS 9BIT)
-            sta SPRITE_ENBL     // ENABLE SPRITES
-            lda #$0F            //  (BITFIELD)
-            sta SPRITE_DBL      // SPRITE V STRETCH
-            lda #$06 
-            sta BORDER_COL      // BORDER COLOR
-            lda #$05 
-            sta BGND_COL        // BG COLOR
+            sta SPRITE2_Y       
             lda #$01 
-            sta SPRITE0_CLR     // P1.COLOR
-            lda #$01 
-            sta SPRITE1_CLR     // P2.COLOR
-            lda #$01 
-            sta SPRITE2_CLR     // BALL.COLOR
-            lda #$82            // NEXT SPRITE IS SCOREBOARD
+            sta SPRITE2_CLR     
+            lda #$82            // sprite 3: Scoreboard ($82)
             sta SPRITE3_PTR     
             lda #$A0 
-            sta SPRITE3_X       // SCOREBOARD.X
+            sta SPRITE3_X       
             lda #$32 
-            sta SPRITE3_Y       // SCOREBOARD.Y
+            sta SPRITE3_Y       
             lda #$01 
-            sta SPRITE3_CLR     // SCOREBOARD.COLOR
+            sta SPRITE3_CLR 
+            lda #$0F 
+            sta SPRITE_DBH      // SPRITE H STRETCH ??
+            lda #$02 
+            sta SPRITE_CORD     // SET P2.X HIGH BIT ??
+            lda #$0F           
+            sta SPRITE_ENBL     // ENABLE SPRITES ??
+            lda #$0F            
+            sta SPRITE_DBL      // SPRITE V STRETCH ??
+            lda #$06 
+            sta BORDER_COL      // border color
+            lda #$05 
+            sta BGND_COL        // background color
             lda #$38 
-            sta CHARMEM_P1      // SCOREBOARD GRAPHICS
+            sta CHARMEM_P1      // SCOREBOARD GRAPHICS ??
             lda #$00 
-            sta VBALLVX         // BALL.X.DIRECTION
-            sta VBALLVY         // BALL.Y.DIRECTION
-            sta VSCOREP2        // P2.SCORE
-            sta VSCOREP1        // P1.SCORE
+            sta VBALLVX         // reset variable  to 0 (ball.vx)
+            sta VBALLVY         // ball.vy
+            sta VSCOREP2        // p2.score
+            sta VSCOREP1        // p2.score
             ldx #$00            // CLS
             lda #$20            // SPACE
 LBL_1:      sta CHARMEM,X       // SCREEN LOC 0400-07F0 1024
