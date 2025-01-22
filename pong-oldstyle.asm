@@ -213,14 +213,14 @@ $0B20   GOAL_CHECK: LDA D010        ; CHECK HIGHT OF
                     INC 0BFE        ; INCREASE SCORE
                     JSR BALL_RST
 $0B38   LBL_23:     RTS
-$0B38   LBL_22:     LDA D004        ; IF H.BIT IS ENABLED
+$0B39   LBL_22:     LDA D004        ; IF H.BIT IS ENABLED
                     CMP #F0         ; BALL IS ON THE RIGHT
                     BCS LBL_24
                     CMP #60
                     BCC LBL_24      ; CHK 384 < BALLX < 496
                     INC 0BFF
                     JSR BALL_RST
-$0BA4   LBL_24:     RTS
+$0B4A   LBL_24:     RTS
         ;
         ; - SCORE RENDER ----------------------
         ;
@@ -358,7 +358,7 @@ $0930   NUMBER:     .BYTE FF,FF,E7,E7,E7,E7,FF,FF
                     .BYTE BD 00 00 BD 00 00 BD 00
                     .BYTE 00 BD 00 00 BD 00 00 BD
                     .BYTE 00 00 BD 00 00 BD 00 00
-                    .BYTE BD BB BB BD BB BB BD 00
+                    .BYTE BD 00 00 BD 00 00 BD 00
                     .BYTE 00 BD 00 00 BD 00 00 BD
                     .BYTE 00 00 81 00 00 FF 00 00
         ;
