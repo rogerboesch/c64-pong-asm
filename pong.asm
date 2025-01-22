@@ -458,16 +458,31 @@ PADDLE:     .byte $00,$FF,$00,$00,$81,$00,$00,$BD
 //
 // Ball Sprite
 //
-BALL:       .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+BALL:       .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$FF,$00
+            .byte $00,$FF,$00
+            .byte $00,$FF,$00
+            .byte $00,$FF,$00
+            .byte $00,$FF,$00
+            .byte $00,$FF,$00
+            .byte $00,$FF,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00,$00,$00
+            .byte $00           // fill to 64 bytes
+
 //
-// Scoreboard Sprite
+// Scoreboard Sprite (empty, will be filled programmatically)
 //
 SCOREBRD:   .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
@@ -478,16 +493,16 @@ SCOREBRD:   .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
 //
-// Number Graphics
+// Numbers
 //
-NUMBER:     .byte $FF,$FF,$E7,$E7,$E7,$E7,$FF,$FF
-            .byte $3C,$3C,$3C,$3C,$3C,$3C,$3C,$3C
-            .byte $FF,$FF,$0F,$FF,$FF,$F0,$FF,$FF
-            .byte $FF,$FF,$0F,$3F,$3F,$0F,$FF,$FF
-            .byte $E7,$E7,$E7,$FF,$FF,$07,$07,$07
-            .byte $FF,$FF,$F0,$FF,$FF,$0F,$FF,$FF
-            .byte $FF,$FF,$E0,$FF,$FF,$E7,$FF,$FF
-            .byte $FF,$FF,$0F,$0F,$0F,$0F,$0F,$0F
-            .byte $FF,$FF,$E7,$FF,$FF,$E7,$FF,$FF
-            .byte $FF,$FF,$E7,$FF,$FF,$07,$FF,$FF
+NUMBER:     .byte $FF,$FF,$E7,$E7,$E7,$E7,$FF,$FF   // 0
+            .byte $3C,$3C,$3C,$3C,$3C,$3C,$3C,$3C   // 1
+            .byte $FF,$FF,$0F,$FF,$FF,$F0,$FF,$FF   // 2
+            .byte $FF,$FF,$0F,$3F,$3F,$0F,$FF,$FF   // 3
+            .byte $E7,$E7,$E7,$FF,$FF,$07,$07,$07   // 4
+            .byte $FF,$FF,$F0,$FF,$FF,$0F,$FF,$FF   // 5
+            .byte $FF,$FF,$E0,$FF,$FF,$E7,$FF,$FF   // 6
+            .byte $FF,$FF,$0F,$0F,$0F,$0F,$0F,$0F   // 7
+            .byte $FF,$FF,$E7,$FF,$FF,$E7,$FF,$FF   // 8
+            .byte $FF,$FF,$E7,$FF,$FF,$07,$FF,$FF   // 9
 
