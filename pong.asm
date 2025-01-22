@@ -125,13 +125,13 @@ START:      nop
             sta SPRITE3_Y       
             lda #$01 
             sta SPRITE3_CLR 
-            lda #$0F 
+            lda #$00 
             sta SPRITE_DBH      // SPRITE H STRETCH ??
             lda #$02 
             sta SPRITE_CORD     // SET P2.X HIGH BIT ??
             lda #$0F           
             sta SPRITE_ENBL     // ENABLE SPRITES ??
-            lda #$0F            
+            lda #$00            
             sta SPRITE_DBL      // SPRITE V STRETCH ??
             lda #$06 
             sta BORDER_COL      // border color
@@ -201,10 +201,10 @@ GAME_LOOP:  jsr PLAYER_MOV
 //
 // - Player Movement ----------------------------------------------------------
 //
-PLAYER_MOV: lda CIA_PORTA       // GET JOYS #2
-            and #$02            // CHECK DOWN
+PLAYER_MOV: lda CIA_PORTA       // Get data from port A
+            and #$02            // Joystick #2
             bne LBL_5 
-            inc SPRITE0_Y       // MOVE P1 DOWN
+            inc SPRITE0_Y       // Move paddle 1 down: y (sprite 0)
             inc SPRITE0_Y 
             inc $D01 
 LBL_5:      lda CIA_PORTA       // CHECK UP
