@@ -71,21 +71,21 @@
 // = BASIC ====================================================================
 //
 
-*=$800 "BASIC"
+*=$0800 "BASIC"
 
-// Add basic starter (SYS(2064))
-.byte $00                           // first byte of BASIC must be 0
-.byte $0C,$8                        // froward adress to next BASIC line
-.byte $0A,$00                       // line 10
-.byte $9E                           // BASIC token for SYS
-.byte $20,$32,$30,$36,$34,$00,$00   // ASCII for " (2064)"
-.byte $00,$00,$00                   // end of BASIC
+// Add BASIC starter (SYS 2064)
+.byte $00                           // first byte of BASIC must be 0      $0800
+.byte $0B,$08                       // adress to next BASIC line ($080A)  $0801
+.byte $0A,$00                       // line 10                            $0803
+.byte $9E                           // BASIC token for SYS                $0805
+.byte $32,$30,$36,$34               // ASCII for 2064                     $0806
+.byte $00,$00,$00                   // end of BASIC                       $080A
 
 //
 // = Game =====================================================================
 //
 
-*=$810 "Game"
+*=$0810 "GAME"
 
 //
 // - Initialisation -----------------------------------------------------------
