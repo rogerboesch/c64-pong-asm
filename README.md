@@ -4,7 +4,10 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 
 ### TODO:
 
-- [ ] Test and fix issues
+- [ ] Display sprites correctly
+- [x] Sound
+- [x] Joystick handling
+- [x] Test game, gameplay
 - [X] Check sprite memory
 - [X] Use variables in STAx and LDx (at work)
 - [x] Check variables
