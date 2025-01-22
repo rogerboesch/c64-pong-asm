@@ -14,6 +14,11 @@
 .const MEM_UPRAM    = $C000     // Upper RAM area begin
 
 // VIC-II: Video Display ($D000-$DFFF | 53248-54271)
+.const SPRITE0_PTR = $07F8      // Sprite pointer #0
+.const SPRITE1_PTR = $07F9      // Sprite pointer #1
+.const SPRITE2_PTR = $07FA      // Sprite pointer #2
+.const SPRITE3_PTR = $07FB      // Sprite pointer #3
+
 .const SPRITE0_X   = $D000      // Sprite #0 X-coordinate
 .const SPRITE0_Y   = $D001      // Sprite #0 Y-coordinate
 .const SPRITE1_X   = $D002      // Sprite #1 X-coordinate
@@ -31,9 +36,6 @@
 .const SPRITE1_CLR = $D028      // Sprite #1 color 
 .const SPRITE2_CLR = $D029      // Sprite #2 color 
 .const SPRITE3_CLR = $D02A      // Sprite #3 color
-.const SPRITE0_PTR = $07F8      // Sprite pointer #0
-.const SPRITE1_PTR = $07F9      // Sprite pointer #1
-.const SPRITE2_PTR = $07FA      // Sprite pointer #2
 .const SPRITE_CORD = $D010      // Sprite #0-#7 X-coordinates (bit #8). Bits
 .const SPRITE_ENBL = $D015      // Sprite enable register
 .const SPRITE_COLL = $D01E      // Sprite/sprite collision register
@@ -91,8 +93,8 @@
 // - Initialisation -----------------------------------------------------------
 //
 START:      nop
-            lda #$14            // SETTING SPRITE GFX
-            sta SPRITE0_PTR
+            lda #$80            // Adress of paddle sprite/64 ($2000/64=$80)
+            sta SPRITE0_PTR 
             sta SPRITE1_PTR     // SPRITE POS INIT
             lda #$20 
             sta SPRITE0_X       // P1.X
@@ -106,10 +108,10 @@ START:      nop
             sta SPRITE2_X       // BALL.X
             lda #$8A 
             sta SPRITE2_Y       // BALL.Y
-            lda #$26 
+            lda #$80 
             sta SPRITE0_PTR     // SPRITE GFX P1
             sta SPRITE1_PTR     // SPRITE GFX P2
-            lda #$27 
+            lda #$81            // Next sprite is ball sprite
             sta SPRITE2_PTR     // SPRITE GFX BALL
             lda #$0F 
             sta SPRITE_DBH      // SPRITE H STRETCH
@@ -129,6 +131,8 @@ START:      nop
             sta SPRITE1_CLR     // P2.COLOR
             lda #$01 
             sta SPRITE2_CLR     // BALL.COLOR
+            lda #$82            // NEXT SPRITE IS SCOREBOARD
+            sta SPRITE3_PTR     
             lda #$A0 
             sta SPRITE3_X       // SCOREBOARD.X
             lda #$32 
@@ -438,21 +442,8 @@ VSCOREP2:   .byte $00   // Score player 2   $0BFE
 // = Data =====================================================================
 //
 
-*=$0BE0 "DATA"
+*=$2000 "DATA"
 
-//
-// Number Graphics
-//
-NUMBER:     .byte $FF,$FF,$E7,$E7,$E7,$E7,$FF,$FF
-            .byte $3C,$3C,$3C,$3C,$3C,$3C,$3C,$3C
-            .byte $FF,$FF,$0F,$FF,$FF,$F0,$FF,$FF
-            .byte $FF,$FF,$0F,$3F,$3F,$0F,$FF,$FF
-            .byte $E7,$E7,$E7,$FF,$FF,$07,$07,$07
-            .byte $FF,$FF,$F0,$FF,$FF,$0F,$FF,$FF
-            .byte $FF,$FF,$E0,$FF,$FF,$E7,$FF,$FF
-            .byte $FF,$FF,$0F,$0F,$0F,$0F,$0F,$0F
-            .byte $FF,$FF,$E7,$FF,$FF,$E7,$FF,$FF
-            .byte $FF,$FF,$E7,$FF,$FF,$07,$FF,$FF
 //
 // Paddle Sprite
 //
@@ -467,15 +458,14 @@ PADDLE:     .byte $00,$FF,$00,$00,$81,$00,$00,$BD
 //
 // Ball Sprite
 //
-BALL:       .byte $C0,$00,$00,$C0,$00,$00,$00,$00
-            .byte $00,$00,$00,$00,$00,$00,$00,$00
-            .byte $00,$00,$00,$00,$00,$00,$00,$00
-            .byte $00,$00,$00,$00,$00,$00,$00,$00
-            .byte $00,$00,$00,$00,$00,$00,$00,$00
-            .byte $00,$00,$00,$00,$00,$00,$00,$00
-            .byte $00,$00,$00,$00,$00,$00,$00,$00
-            .byte $00,$00,$00,$00,$00,$00,$00,$00
-
+BALL:       .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+            .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 //
 // Scoreboard Sprite
 //
@@ -487,4 +477,17 @@ SCOREBRD:   .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
             .byte $00,$00,$00,$00,$00,$00,$00,$00
+//
+// Number Graphics
+//
+NUMBER:     .byte $FF,$FF,$E7,$E7,$E7,$E7,$FF,$FF
+            .byte $3C,$3C,$3C,$3C,$3C,$3C,$3C,$3C
+            .byte $FF,$FF,$0F,$FF,$FF,$F0,$FF,$FF
+            .byte $FF,$FF,$0F,$3F,$3F,$0F,$FF,$FF
+            .byte $E7,$E7,$E7,$FF,$FF,$07,$07,$07
+            .byte $FF,$FF,$F0,$FF,$FF,$0F,$FF,$FF
+            .byte $FF,$FF,$E0,$FF,$FF,$E7,$FF,$FF
+            .byte $FF,$FF,$0F,$0F,$0F,$0F,$0F,$0F
+            .byte $FF,$FF,$E7,$FF,$FF,$E7,$FF,$FF
+            .byte $FF,$FF,$E7,$FF,$FF,$07,$FF,$FF
 
