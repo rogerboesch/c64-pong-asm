@@ -8,6 +8,7 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 
 ### TASKS:
 
+- [ ] Test on real C64
 - [x] Display sprites correctly
     - [x] Paddles
     - [x] Ball
