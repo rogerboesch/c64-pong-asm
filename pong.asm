@@ -92,9 +92,7 @@
 // - Initialisation -----------------------------------------------------------
 //
 START:      nop
-//
-// Init all 4 sprites
-//
+            // Init all 4 sprites ---------------------------------------------
             lda #$80            // sprite 0: paddle 1 ($2000/64=$80)
             sta SPRITE0_PTR     
             lda #$20 
@@ -139,13 +137,13 @@ START:      nop
             sta BORDER_COL      // border color
             lda #$05 
             sta BGND_COL        // background color
-            // ------------------- reset variables
+            // Reset variables ------------------------------------------------
             lda #$00 
             sta VBALLVX         // ball.vx
             sta VBALLVY         // ball.vy
             sta VSCOREP2        // p2.score
             sta VSCOREP1        // p2.score
-            // ------------------- Clear screen
+            // Clear screen ---------------------------------------------------
             ldx #$00            
             lda #$20            
 LBL_1:      sta CHARMEM,X       
@@ -154,11 +152,11 @@ LBL_1:      sta CHARMEM,X
             sta CHARMEM_X3,X 
             inx
             bne LBL_1 
-            // ------------------- Disable display
+            // Disable display ------------------------------------------------ 
             lda SCREEN_CTL 
             and #$EF            
             sta SCREEN_CTL      
-            // ------------------- Startup sequence
+            // Startup sequence ----------------------------------------------- 
             ldx #$C0 
 LBL_2:      ldy #$00
 LBL_3:      jsr BLEEP           
@@ -171,7 +169,7 @@ LBL_3:      jsr BLEEP
             sta BORDER_COL      // blink border
             sta BGND_COL        // blink background
             lda SCREEN_CTL 
-            // ------------------- Enable display
+            // Enable display ------------------------------------------------- 
             ora #$10           
             sta SCREEN_CTL 
             jmp SCORE_INIT
@@ -433,7 +431,6 @@ BLEEP:      sty SIDV1_FRQH      // H.byte OF FREQ TO Y
 //
 // = Variables ================================================================
 //
-
 VBALLVX:    .byte $00   // Ball velocity x  $0BF0 (old mem!)
 VBALLVY:    .byte $00   // .. y             $0BF1
 VSLOWX:     .byte $1f   // Ball slowdown x  $0BF2
@@ -445,7 +442,7 @@ VSCOREP2:   .byte $00   // Score player 2   $0BFE
 // = Data =====================================================================
 //
 
-*=$2000 "DATA"
+*=$2000 "SPRITE DATA"
 
 //
 // Paddle Sprite
