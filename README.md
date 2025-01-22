@@ -6,7 +6,7 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 
 - [ ] Ball movement is not correct (flickers)
 
-### TODO:
+### TASKS:
 
 - [x] Display sprites correctly
     - [x] Paddles
