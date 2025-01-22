@@ -1,17 +1,5 @@
-*=$0800 "BASIC Start"  
-// These bytes are a one line basic program that will 
-// do a sys call to assembly language portion of
-// of the program which will be at $1000 or 4096 decimal
-// basic line is: 10 SYS (4096)
-.byte $00                               // first byte of basic should be a zero
-.byte $0E, $08                          // Forward address to next basic line
-.byte $0A, $00                          // this will be line 10 ($0A)
-.byte $9E                               // basic token for SYS
-.byte $20, $28, $34, $30, $39, $36, $29 // ASCII for " (4096)"
-.byte $00, $00, $00                     // end of basic program (addr $080E from above)
-
 //
-// - ROM Adresses (Constants) ---------
+// - KERNAL Adresses (Constants) ==============================================
 //
 
 // Zero Page ($0000-$00FF | 0-255)
@@ -68,10 +56,36 @@
 .const CHARMEM_X3  = $06F0        // Offset 3 to charmem, TODO: Only 240 instead of 256 difference, is this correct?
 .const CHARMEM_P1  = $07FB        // Position in charmem for scoreboard graphic
 
+// Memory Map:
+//  $0800-$080f BASIC Starter
+//  $1000-$12ba Game
+//  $1770-$187f Sprite Data
+
+//
+// = BASIC ====================================================================
+//
+
+*=$0800 "BASIC Starter"  
+
+// These bytes are a one line basic program that will 
+// do a sys call to assembly language portion of
+// of the program which will be at $1000 or 4096 decimal
+// basic line is: 10 SYS (4096)
+.byte $00                               // first byte of basic should be a zero
+.byte $0E, $08                          // Forward address to next basic line
+.byte $0A, $00                          // this will be line 10 ($0A)
+.byte $9E                               // basic token for SYS
+.byte $20, $28, $34, $30, $39, $36, $29 // ASCII for " (4096)"
+.byte $00, $00, $00                     // end of basic program (addr $080E from above)
+
+//
+// = Game =====================================================================
+//
+
 *=$1000 "Game"
 
 //
-// - Initialisation --------------------
+// - Initialisation -----------------------------------------------------------
 //
 START:      nop
             lda #$14            // SETTING SPRITE GFX
@@ -152,7 +166,7 @@ LBL_3:      jsr BLEEP           // BEEP SOUND
             sta SCREEN_CTL 
             jmp SCORE_INIT
 //
-// - Sprite Score Clear ----------------
+// - Sprite Score Clear -------------------------------------------------------
 //
 SCORE_INIT: lda #$00
             ldx #$40            // CLEAR 64 BYTES
@@ -166,7 +180,7 @@ LBL_4:      sta SCOREBRD,X      // SCOREBOARD SPRITE
             sta SCOREBRD+16
             jmp GAME_LOOP
 //
-// - Main Loop -------------------------
+// - Main Loop ----------------------------------------------------------------
 //
 GAME_LOOP:  jsr PLAYER_MOV
             jsr BALL_MOV
@@ -177,9 +191,9 @@ GAME_LOOP:  jsr PLAYER_MOV
             jsr COLL_CHEK
             jmp GAME_LOOP
 //
-// - Player Movement -------------------
+// - Player Movement ----------------------------------------------------------
 //
-PLAYER_MOV: lda CIA_PORTA        // GET JOYS #2
+PLAYER_MOV: lda CIA_PORTA       // GET JOYS #2
             and #$02            // CHECK DOWN
             bne LBL_5 
             inc SPRITE0_Y       // MOVE P1 DOWN
@@ -235,7 +249,7 @@ LBL_12:     lda CIA_PORTB       // POLL JOY #1
             dec SPRITE1_Y
 LBL_13:     rts
 //
-// - Ball Movement ---------------------
+// - Ball Movement ------------------------------------------------------------
 //
 BALL_MOV:   lda VBALLVX    
             beq LBL_14          // CHECK BALL H DIR
@@ -271,7 +285,7 @@ LBL_20:     lda SPRITE2_Y       // GET BALL Y
             jsr BLEEP   
 LBL_21:     rts
 //
-// - Goal Check ------------------------
+// - Goal Check ---------------------------------------------------------------
 //
 GOAL_CHECK: lda SPRITE_CORD     // CHECK HIGHT OF 
             and #$04            // BALL SPRITE
@@ -293,7 +307,7 @@ LBL_22:     lda SPRITE2_X       // IF H.BIT IS ENABLED
             jsr BALL_RST
 LBL_24:     rts
 //
-// - Score Render ----------------------
+// - Score Render -------------------------------------------------------------
 //
 SCORE_REND: lda VSCOREP1        // LOAD P1 SCORE
             and #$0F
@@ -331,7 +345,7 @@ LBL_26:     lda NUMBER,X        // LOAD NUM GFX LINE
             bne LBL_26          // REPEAT 8 TIMES
             rts
 //
-// - Match Over Check ------------------
+// - Match Over Check ---------------------------------------------------------
 //
 WIN_CHECK:  lda VSCOREP2        // CHECK P2 SCORE
             cmp #$0A            // IF >= 10
@@ -343,7 +357,7 @@ LBL_27:     lda VSCOREP1        // GET P1 SCORE
             jmp START           // RESET IF YES
 LBL_28:     rts
 //
-// - Sprite Collision ------------------
+// - Sprite Collision ---------------------------------------------------------
 //
 COLL_CHEK:  ldy #$40            // SET BLEEP PITCH
             lda SPRITE_COLL     // POLL SPRITE COLLISION
@@ -361,7 +375,7 @@ LBL_29:     txa
             jsr BLEEP
 LBL_30:     rts
 //
-// - Slowdown --------------------------
+// - Slowdown -----------------------------------------------------------------
 //
 SLOWDOWN:   ldx VSLOWX          // LOAD SPEED VALUES
 LBL_32:     ldy VSLOWY
@@ -374,14 +388,14 @@ LBL_31:     nop
             bne LBL_32
             rts
 //
-// - Ball Reset ------------------------
+// - Ball Reset ---------------------------------------------------------------
 //
 BALL_RST:   lda #$AC     
             sta SPRITE2_X       // SET BALL.X
             lda #$8A
             sta SPRITE2_Y       // SET BALL.Y
             lda SPRITE_CORD
-           and #$FB            // CLEAR 9TH BIT
+            and #$FB            // CLEAR 9TH BIT
             sta SPRITE_CORD     // OF BALL.X
             lda VBALLVX
             eor #$01            // TOGGLE DIRECTION
@@ -390,7 +404,7 @@ BALL_RST:   lda #$AC
             jsr BLEEP
             rts
 //
-// - Play Sound ------------------------
+// - Play Sound ---------------------------------------------------------------
 //
 BLEEP:      sty SIDV1_FRQH      // H.byte OF FREQ TO Y
             lda #$20            // L.byte OF FREQ TO 32
@@ -407,7 +421,7 @@ BLEEP:      sty SIDV1_FRQH      // H.byte OF FREQ TO Y
             sta SIDV1_CTRL
             rts
 //
-// = Variables ========================
+// = Variables ================================================================
 //
 VBALLVX:    .byte $00   // Ball velocity x  $0BF0 (old mem!)
 VBALLVY:    .byte $00   // .. y             $0BF1
@@ -417,10 +431,10 @@ VSCOREP1:   .byte $00   // Score player 1   $0BFF
 VSCOREP2:   .byte $00   // Score player 2   $0BFE
 
 //
-// = Data ==============================
+// = Data =====================================================================
 //
 
-*=$1770 "Game Data"
+*=$1770 "Sprite Data"
 
 //
 // Number Graphics
