@@ -24,6 +24,8 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 
 ### BUGS:
 
+- [ ] X-position of right paddle
+- [ ] Ball limit on right border
 - [x] Ball movement is not correct (flickers)
 
 ### Original "Source"
