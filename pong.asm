@@ -156,7 +156,7 @@ LBL_1:      sta CHARMEM,X
             lda SCREEN_CTL 
             and #$EF            
             sta SCREEN_CTL      
-            // Startup sequence ----------------------------------------------- 
+            // Screen blink --------------------------------------------------- 
             ldx #$C0 
 LBL_2:      ldy #$00
 LBL_3:      jsr BLEEP           
@@ -164,10 +164,12 @@ LBL_3:      jsr BLEEP
             bne LBL_3 
             inc BORDER_COL      // blink border
             inx
-            bne LBL_2           
-            lda #$00 
-            sta BORDER_COL      // blink border
-            sta BGND_COL        // blink background
+            bne LBL_2   
+            // Set field colors -----------------------------------------------        
+            lda #$01 
+            sta BORDER_COL      
+            lda #00
+            sta BGND_COL        
             lda SCREEN_CTL 
             // Enable display ------------------------------------------------- 
             ora #$10           
@@ -206,12 +208,15 @@ PLAYER_MOV: lda CIA_PORTA       // Get data from port A
             bne LBL_5 
             inc SPRITE0_Y       // Move paddle 1 down: y (sprite 0)
             inc SPRITE0_Y 
+            inc SPRITE0_Y 
+            inc SPRITE0_Y 
             inc $D01 
 LBL_5:      lda CIA_PORTA       // CHECK UP
             and #$01 
             bne LBL_6 
             dec SPRITE0_Y       // MOVE P1 UP
             dec SPRITE0_Y 
+            dec SPRITE0_Y
             dec SPRITE0_Y
 LBL_6:      jsr LBL_7
             nop
@@ -238,8 +243,8 @@ LBL_9:      dex
             and #$10 
             bne LBL_11          // IF NOT UPD BALL
             jsr BALL_MOV        // 3 TIMES
-            jsr BALL_MOV        // OTHERWISE BALL
-            jsr BALL_MOV        // IS 4 TIMES SLOWER
+            //jsr BALL_MOV        // OTHERWISE BALL
+            //jsr BALL_MOV        // IS 4 TIMES SLOWER
 LBL_11:     rts
             rts
             brk 
