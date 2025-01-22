@@ -121,7 +121,7 @@ START:      nop
             sta SPRITE3_PTR     
             lda #$A0 
             sta SPRITE3_X       
-            lda #$32 
+            lda #$36 
             sta SPRITE3_Y       
             lda #$01 
             sta SPRITE3_CLR 

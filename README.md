@@ -2,13 +2,10 @@
 
 This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 
-### BUGS:
-
-- [ ] Ball movement is not correct (flickers)
-
 ### TASKS:
 
 - [ ] Test on real C64
+- [x] Reduce speed
 - [x] Display sprites correctly
     - [x] Paddles
     - [x] Ball
@@ -24,6 +21,10 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 - [x] BNE,BCS,BCC,BEQ: Use labels instead of memory adresses
 - [x] Convert to KickAsembler format
 - [x] Can be asembled
+
+### BUGS:
+
+- [x] Ball movement is not correct (flickers)
 
 ### Original "Source"
 
