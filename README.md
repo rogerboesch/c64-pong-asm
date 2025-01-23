@@ -2,6 +2,10 @@
 
 This is personal fun project of converting [Ponk](http://sos.gd/ponk/) to KickAssembler.
 
+![Pong](/doc/pong.png)
+
+Video on [YouTube](https://youtu.be/fIG0YfgFhKI)
+
 ### TASKS (done)
 
 - [x] Test on real C64
