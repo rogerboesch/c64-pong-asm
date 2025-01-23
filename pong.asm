@@ -150,25 +150,25 @@ START:      nop
             // Clear screen ---------------------------------------------------
             ldx #$00            
             lda #$20            
-LBL_1:      sta CHARMEM,X       
+INIT_1:     sta CHARMEM,X       
             sta CHARMEM_X1,X    
             sta CHARMEM_X2,X  
             sta CHARMEM_X3,X 
             inx
-            bne LBL_1 
+            bne INIT_1 
             // Disable display ------------------------------------------------ 
             lda SCREEN_CTL 
             and #$EF            
             sta SCREEN_CTL      
             // Screen blink --------------------------------------------------- 
             ldx #$C0 
-LBL_2:      ldy #$00
-LBL_3:      jsr SOUND           
+INIT_2:     ldy #$00
+INIT_3:     jsr SOUND           
             iny
-            bne LBL_3 
+            bne INIT_3 
             inc BORDER_COL      // blink border
             inx
-            bne LBL_2   
+            bne INIT_2   
             // Set field colors -----------------------------------------------        
             lda #$01 
             sta BORDER_COL      
@@ -178,15 +178,15 @@ LBL_3:      jsr SOUND
             // Enable display ------------------------------------------------- 
             ora #$10           
             sta SCREEN_CTL 
-            jmp SCORE_INIT
+            jmp SCORE_CLR
 //
-// - Sprite Score Clear -------------------------------------------------------
+// - Score Clear --------------------------------------------------------------
 //
-SCORE_INIT: lda #$00
+SCORE_CLR:  lda #$00
             ldx #$40            
-LBL_4:      sta SCOREBRD,X      // clear all 64 bytes
+SCLR_1:     sta SCOREBRD,X      // clear all 64 bytes
             dex
-            bne LBL_4
+            bne SCLR_1
             lda #$3C            // place dot between player scores
             sta SCOREBRD+7
             sta SCOREBRD+10     
@@ -202,125 +202,125 @@ GAME_LOOP:  jsr PLAYER_MOV
             jsr GOAL_CHECK
             jsr SCORE_REND
             jsr WIN_CHECK
-            jsr COLL_CHEK
+            jsr COLL_CHECK
             jmp GAME_LOOP
 //
 // - Player Movement ----------------------------------------------------------
 //
 PLAYER_MOV: lda CIA_PORTA       // get data for joystick #2
             and #$02            // check if down 
-            bne LBL_5 
+            bne PMOV_1 
             inc SPRITE0_Y       // move paddle 1 down: y (sprite 0)
             inc SPRITE0_Y 
             inc SPRITE0_Y 
             inc SPRITE0_Y 
             inc $D01 
-LBL_5:      lda CIA_PORTA       
+PMOV_1:     lda CIA_PORTA       
             and #$01            // check if up
-            bne LBL_6 
+            bne PMOV_2 
             dec SPRITE0_Y       // move paddle 1 up: y (sprite 0)
             dec SPRITE0_Y 
             dec SPRITE0_Y
             dec SPRITE0_Y
-LBL_6:      jsr LBL_7
+PMOV_2:     jsr PMOV_7
             nop
             nop
             nop
             nop
             nop
             ldx #$02            // check against wall
-LBL_10:     lda SPRITE0_Y,X     // get player y
+PMOV_3:     lda SPRITE0_Y,X     // get player y
             cmp #$32            // check if to high
-            bcs LBL_8 
+            bcs PMOV_4 
             lda #$32            // clamp
             sta SPRITE0_Y,X 
-LBL_8:      lda SPRITE0_Y,X     
+PMOV_4:     lda SPRITE0_Y,X     
             cmp #$CF            // check if to low
-            bcc LBL_9 
+            bcc PMOV_5 
             lda #$CF            // clamp
             sta SPRITE0_Y,X
-LBL_9:      dex
+PMOV_5:     dex
             dex
-            beq LBL_10          // ?
+            beq PMOV_3          // ?
             lda CIA_PORTA       // ?
             eor CIA_PORTB       // ?
             and #$10 
-            bne LBL_11          // Check for second joystick
+            bne PMOV_6          // Check for second joystick
             jsr BALL_MOV        // call ball_mov() several times here makes it faster
-LBL_11:     rts
+PMOV_6:     rts
             rts
             brk 
-LBL_7:      lda CIA_PORTB       // get data for joystick #1
+PMOV_7:     lda CIA_PORTB       // get data for joystick #1
             and #$02            // check if down
-            bne LBL_12          
+            bne PMOV_8          
             inc SPRITE1_Y       // move paddle 0 down: y (sprite 1)
             inc SPRITE1_Y 
             inc SPRITE1_Y 
-LBL_12:     lda CIA_PORTB       
+PMOV_8:     lda CIA_PORTB       
             and #01             // check if up
-            bne LBL_13          
+            bne PMOV_9          
             dec SPRITE1_Y       // move paddle 0 up: y (sprite 1)
             dec SPRITE1_Y       // MOVE UP
             dec SPRITE1_Y
-LBL_13:     rts
+PMOV_9:     rts
 //
 // - Ball Movement ------------------------------------------------------------
 //
 BALL_MOV:   lda VBALLVX    
-            beq LBL_14          // check h direction of ball
+            beq BMOV_1          // check h direction of ball
             inc SPRITE2_X       // if 0 - move right
-            jmp LBL_15
-LBL_14:     dec SPRITE2_X       // if 1 - move left
-LBL_15:     lda VBALLVY
-            beq LBL_16          // check h direction of ball
+            jmp BMOV_2
+BMOV_1:     dec SPRITE2_X       // if 1 - move left
+BMOV_2:     lda VBALLVY
+            beq BMOV_3          // check h direction of ball
             inc SPRITE2_Y       // if 0 - move down
-            jmp LBL_17
-LBL_16:     dec SPRITE2_Y       // if 1 - move up
-LBL_17:     lda SPRITE2_X       // check for x overflow 
+            jmp BMOV_4
+BMOV_3:     dec SPRITE2_Y       // if 1 - move up
+BMOV_4:     lda SPRITE2_X       // check for x overflow 
             ldx VBALLVX         // to setup bit#9
-            beq LBL_18          // check for 00 or FF
+            beq BMOV_5          // check for 00 or FF
             eor #$FF            // depending on direction
-LBL_18:     and #$FF
-            bne LBL_19          // if overflow
+BMOV_5:     and #$FF
+            bne BMOV_6          // if overflow
             lda SPRITE_CORD     // set high-byte of sprite 3 to 1
             eor #$04            
             sta SPRITE_CORD
-LBL_19:     ldy #$20            // set sound pitch
+BMOV_6:     ldy #$20            // set sound pitch
             lda SPRITE2_Y       // get ball y
             cmp #$32            // check if to high
-            bcs LBL_20  
+            bcs BMOV_7  
             lda #$01            // change direction
             sta VBALLVY
             jsr SOUND
-LBL_20:     lda SPRITE2_Y       // get ball y
+BMOV_7:     lda SPRITE2_Y       // get ball y
             cmp #$F0            // check if TO LOW
-            bcc LBL_21
+            bcc BMOV_8
             lda #$00            // change direction
             sta VBALLVY
             jsr SOUND   
-LBL_21:     rts
+BMOV_8:     rts
 //
 // - Goal Check ---------------------------------------------------------------
 //
 GOAL_CHECK: lda SPRITE_CORD     // check height of ball sprite 
             and #$04            
-            bne LBL_22          // if high-byte is disabled
+            bne GCHK_2          // if high-byte is disabled
             lda SPRITE2_X       // ball is on the left side
             cmp #$10
-            bcc LBL_23          // check 16 < ball.x < 32
+            bcc GCHK_1          // check 16 < ball.x < 32
             cmp #$20
-            bcs LBL_23
+            bcs GCHK_1
             inc VSCOREP2        // increase score
             jsr BALL_RST
-LBL_23:     rts
-LBL_22:     lda SPRITE2_X       // if high-byte is enabled
+GCHK_1:     rts
+GCHK_2:     lda SPRITE2_X       // if high-byte is enabled
             cmp #$F0            // ball is on the right side
-            bcs LBL_24
+            bcs GCHK_3
             cmp #$60
-            bcc LBL_24          // check 384 < ball.x < 496
+            bcc GCHK_3          // check 384 < ball.x < 496
             inc VSCOREP1
             jsr BALL_RST
-LBL_24:     rts
+GCHK_3:     rts
 //
 // - Score Render -------------------------------------------------------------
 //
@@ -333,14 +333,14 @@ SCORE_REND: lda VSCOREP1        // load p1 score
             lda #$08            // set counter var to 8
             sta MEM_UPRAM
             ldy #$00
-LBL_25:     lda NUMBER,X        // load character line (number)
+SCRD_1:     lda NUMBER,X        // load character line (number)
             sta SCOREBRD,Y      // store line in sprite
             inx                 // next character line (number)
             iny                 // next sprite line
             iny                 // sprite is 3 byte wide = 24 pixels
             iny                 
             dec MEM_UPRAM
-            bne LBL_25          // repeat for 8 lines
+            bne SCRD_1          // repeat for 8 lines
             lda VSCOREP2        // load p2 score
             and #$0F
             asl                 // multiply by 8
@@ -350,57 +350,57 @@ LBL_25:     lda NUMBER,X        // load character line (number)
             lda #$08            // set counter var to 8
             sta MEM_UPRAM        
             ldy #$00
-LBL_26:     lda NUMBER,X        // load character line (number)
+SCRD_2:     lda NUMBER,X        // load character line (number)
             sta SCOREBRD+2,Y    // store line in sprite
             inx                 // next character line (number)
             iny                 // next sprite line
             iny
             iny
             dec MEM_UPRAM
-            bne LBL_26          // repeat for 8 lines
+            bne SCRD_2          // repeat for 8 lines
             rts
 //
 // - Match Over Check ---------------------------------------------------------
 //
 WIN_CHECK:  lda VSCOREP2        // get p2 score
             cmp #$0A            // if >= 10
-            bcc LBL_27
+            bcc WCHK_1
             jmp START           // reset if yes
-LBL_27:     lda VSCOREP1        // get p1 score
+WCHK_1:     lda VSCOREP1        // get p1 score
             cmp #$0A            // if >= 10
-            bcc LBL_28
+            bcc WCHK_2
             jmp START           // reset if yes
-LBL_28:     rts
+WCHK_2:     rts
 //
 // - Sprite Collision ---------------------------------------------------------
 //
-COLL_CHEK:  ldy #$40            // set sound pitch
+COLL_CHECK: ldy #$40            // set sound pitch
             lda SPRITE_COLL     // poll sprite collision
             tax
             and #$01
-            beq LBL_29          // if p1 is colliding
+            beq CCHK_1          // if p1 is colliding
             lda #$01            // change ball direction
             sta VBALLVX
             jsr SOUND
-LBL_29:     txa
+CCHK_1:     txa
             and #$02
-            beq LBL_30          // IF P2 IS COLLIDING
+            beq CCHK_2          // if p2 is colliding
             lda #$00            // change ball direction
             sta VBALLVX
             jsr SOUND
-LBL_30:     rts
+CCHK_2:     rts
 //
 // - Slowdown -----------------------------------------------------------------
 //
 SLOWDOWN:   ldx VSLOWX          // load speed values
-LBL_32:     ldy VSLOWY
-LBL_31:     nop
+SLOW_1:     ldy VSLOWY
+SLOW_2:     nop
             nop
             nop
             dey
-            bne LBL_31
+            bne SLOW_2
             dex                 
-            bne LBL_32
+            bne SLOW_1
             rts
 //
 // - Ball Reset ---------------------------------------------------------------
