@@ -1,10 +1,10 @@
 # C64 Assembler - Pong
 
-This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
+This is personal fun project of converting [Ponk](http://sos.gd/ponk/) to KickAssembler.
 
-### TASKS:
+### TASKS (done)
 
-- [ ] Test on real C64
+- [x] Test on real C64
 - [x] Reduce speed
 - [x] Display sprites correctly
     - [x] Paddles
@@ -13,8 +13,8 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 - [x] Sound
 - [x] Joystick handling
 - [x] Test game, gameplay
-- [X] Check sprite memory
-- [X] Use variables in STAx and LDx (at work)
+- [x] Check sprite memory
+- [x] Use variables in STAx and LDx (at work)
 - [x] Check variables
 - [x] Write old style ASM
 - [x] JMP,JSP: Use labels instead of memory adresses
@@ -22,7 +22,7 @@ This is WIP of converting [Ponk](http://sos.gd/ponk/) to KickAssembler
 - [x] Convert to KickAsembler format
 - [x] Can be asembled
 
-### BUGS:
+### BUGS (open)
 
 - [ ] X-position of right paddle
 - [ ] Ball limit on right border
