@@ -34,7 +34,21 @@
             },
             "problemMatcher": []
         },
-            {
+        {
+            "group": "build",
+            "label": "ACME - build",
+            "command": "acme ${file}",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "run",
             "type": "shell",
             "command": "~/RetroTools/c64/vice/x64sc -drive8type 0 -autostartprgmode 1 -autostart ${workspaceFolder}/bin/pong.prg",

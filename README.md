@@ -1,6 +1,10 @@
 # C64 Assembler - Pong
 
-This is personal fun project of converting [Ponk](http://sos.gd/ponk/) to KickAssembler.
+This is personal fun project of converting [Ponk](http://sos.gd/ponk/) using cross assembler.
+
+- ACME: [pong-acme.asm](pong-acme.asm)
+- KickAssembler: [pong.asm](pong.asm)
+
 
 ![Pong](/doc/pong.png)
 
@@ -8,6 +12,7 @@ Video on [YouTube](https://youtu.be/fIG0YfgFhKI)
 
 ### TASKS (done)
 
+- [x] Version for ACME assembler
 - [x] Test on real C64
 - [x] Reduce speed
 - [x] Display sprites correctly
